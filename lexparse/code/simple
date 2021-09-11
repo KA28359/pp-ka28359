@@ -5,4 +5,6 @@
 # the path to the input program to parse/analyize.
 
 cp="$(pwd)/../antlr-4.9.2-complete.jar"
-java -Xmx500M -cp ${cp}:. org.antlr.v4.gui.TestRig SimpleLang r -tree $1
+java -Xmx500M -cp ${cp}:. org.antlr.v4.gui.TestRig SimpleLang program -tree $1
+javac -cp ${cp} *.java
+java -cp ${cp}:. test $1
