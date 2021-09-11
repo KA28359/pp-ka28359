@@ -1,4 +1,3 @@
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -237,7 +236,17 @@ public class MyVisitor extends SimpleLangBaseVisitor<Object>{
                     int ordVal = c;
                     HashMap<String,Integer> temp = intVarTracker.get(currentCtx.getText());
                     temp.put(ctx.designator().getText(),ordVal);
-                }else if(Objects.equals(ctx.expr().getText(), "true") || Objects.equals(ctx.expr().getText(), "false")){
+                }else if(ctx.expr().getText().startsWith("chr")){
+                    try{
+                        int number = Integer.parseInt(ctx.expr().getText().substring(4,ctx.expr().getText().length()-1));
+                        char c = (char)number;
+                        HashMap<String,String> temp = charVarTracker.get(currentCtx.getText());
+                        String out = ""+c;
+                        temp.put(ctx.designator().getText(),out);
+                    }catch(NumberFormatException ignored){
+                    }
+
+                } else if(Objects.equals(ctx.expr().getText(), "true") || Objects.equals(ctx.expr().getText(), "false")){
                     HashMap<String,Boolean> temp = boolVarTracker.get(currentCtx.getText());
                     if(Objects.equals(ctx.expr().getText(), "true")){
                         temp.put(ctx.designator().getText(), true);
