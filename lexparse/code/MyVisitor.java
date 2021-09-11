@@ -1,4 +1,4 @@
-
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -207,17 +207,9 @@ public class MyVisitor extends SimpleLangBaseVisitor<Object>{
                 }
 
             }
-            //System.out.println(ctx.PRINT().getText());
+
         }
-//        if(ctx.designator() != null) {
-//            System.out.println(ctx.designator().getText());
-//        }
-        //List<ParseTree> children = ctx.children;
-        //for(ParseTree c : children){
 
-        //    System.out.println(c.getText());
-
-        //}
 
         return visitChildren(ctx);
     }
@@ -231,16 +223,20 @@ public class MyVisitor extends SimpleLangBaseVisitor<Object>{
             test = currentCtx.getText();
 
         }
-        //System.out.println(currentCtx.getText());
 
 
         if(ctx.expr() != null) {
-            //System.out.println(ctx.designator().getText() + "=" + ctx.expr().getText());
-            if(charVarTracker.containsKey(currentCtx.getText())){
+            if(charVarTracker.containsKey(currentCtx.getText()) || intVarTracker.containsKey(currentCtx.getText()) || boolVarTracker.containsKey(currentCtx.getText())){
                 if(ctx.expr().getText().startsWith("\"")){
                     HashMap<String,String> temp = charVarTracker.get(currentCtx.getText());
                     temp.put(ctx.designator().getText(),ctx.expr().getText().substring(1,ctx.expr().getText().length()-1));
-                    //System.out.println(ctx.expr().getText().substring(1,ctx.expr().getText().length()-1));
+                }else if(ctx.expr().getText().startsWith("ord")){
+
+                    String s = ctx.expr().getText().substring(5,ctx.expr().getText().length()-2);
+                    char c = s.charAt(0);
+                    int ordVal = c;
+                    HashMap<String,Integer> temp = intVarTracker.get(currentCtx.getText());
+                    temp.put(ctx.designator().getText(),ordVal);
                 }else if(Objects.equals(ctx.expr().getText(), "true") || Objects.equals(ctx.expr().getText(), "false")){
                     HashMap<String,Boolean> temp = boolVarTracker.get(currentCtx.getText());
                     if(Objects.equals(ctx.expr().getText(), "true")){
@@ -263,9 +259,21 @@ public class MyVisitor extends SimpleLangBaseVisitor<Object>{
         }else if(ctx.actPars() != null){
             //System.out.println(ctx.designator().getText() + ctx.actPars().getText() );
         }else if(ctx.PP() != null){
-            //System.out.println(ctx.designator().getText() + ctx.PP().getText());
+            String var = ctx.designator().getText();
+            if(intVarTracker.get(currentCtx.getText()).containsKey(var)) {
+                int currentVal = intVarTracker.get(currentCtx.getText()).get(var);
+                currentVal = currentVal + 1;
+                HashMap<String, Integer> temp = intVarTracker.get(currentCtx.getText());
+                temp.put(ctx.designator().getText(), currentVal);
+            }
         }else if(ctx.MM() != null){
-            //System.out.println(ctx.designator().getText() + ctx.MM().getText() );
+            String var = ctx.designator().getText();
+            if(intVarTracker.get(currentCtx.getText()).containsKey(var)) {
+                int currentVal = intVarTracker.get(currentCtx.getText()).get(var);
+                currentVal = currentVal - 1;
+                HashMap<String, Integer> temp = intVarTracker.get(currentCtx.getText());
+                temp.put(ctx.designator().getText(), currentVal);
+            }
         }
         return visitChildren(ctx);
     }
@@ -285,19 +293,27 @@ public class MyVisitor extends SimpleLangBaseVisitor<Object>{
     @Override public Object visitDesignator(SimpleLangParser.DesignatorContext ctx) {
 
 
+
         List<TerminalNode> list = ctx.IDENTIFIER();
 
         for(TerminalNode n : list){
             //System.out.println(n.getText());
            // declared.put(n.getText(),"designator");
 
-            if(!declared.containsKey(n.getText()) && !n.getText().equals("this") && !expressions.containsKey(n.getText())){
+            if(!declared.containsKey(n.getText()) && !n.getText().equals("this") && !expressions.containsKey(n.getText()) && !n.getText().equals("ord") && !n.getText().equals("chr")
+                    && !n.getText().equals("len")){
 
                 System.out.println("NAME USE ERROR");
                 System.out.println(n.getText());
             }
 
+
+
         }
+
+
+
+
         return visitChildren(ctx);
     }
 
