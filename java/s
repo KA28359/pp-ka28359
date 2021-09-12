@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# NOTE: do NOT modify this file.  This script runs tests.
+
+set -e
+
+if ! java -version |& grep '1.8' > /dev/null; then
+        echo "ERROR: Please use Oracle Java 8"
+        exit 1
+fi
+
+echo "Compile code"
+( cd code
+  javac *.java )
+
+( cd code
+  ./simple -print 0 ../tests/1.txt ../tests/1.out )
