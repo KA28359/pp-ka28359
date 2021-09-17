@@ -1008,7 +1008,7 @@ public class Table {
                     int index = headers.indexOf(colIdent);
                     colIdent = String.valueOf(index);
                 }else if(!IsInt(colIdent) && !headers.contains(colIdent)){
-                    System.out.println("COL NAME ERROR");
+                    System.out.println("INDEX ERROR");
                     return;
                 }
 
@@ -1425,7 +1425,7 @@ public class Table {
                     int newIndex = headers.indexOf(colIdent);
                     colIdent = String.valueOf(newIndex);
                 }else if(!IsInt(colIdent) && !headers.contains(colIdent)){
-                    System.out.println("COL NAME ERROR");
+                    System.out.println("INDEX ERROR");
                     return;
                 }
             }
@@ -1834,7 +1834,7 @@ public class Table {
                     int newIndex = headers.indexOf(colIdent);
                     colIdent = String.valueOf(newIndex);
                 }else if(!IsInt(colIdent) && !headers.contains(colIdent)){
-                    System.out.println("COL NAME ERROR");
+                    System.out.println("INDEX ERROR");
                     return;
                 }
             }
