@@ -194,11 +194,11 @@ public class Table {
 
             for (String colVal : colVals) {
                 int currentCol = Integer.parseInt(String.valueOf(colVal));
-                System.out.print(currentList.get(currentCol) + " ");
+                //System.out.print(currentList.get(currentCol) + " ");
                 f.write(currentList.get(currentCol) + " ");
             }
             if(counter++ != token.size()){
-                System.out.print("\n");
+                //System.out.print("\n");
                 f.write("\n");
             }
 
@@ -295,15 +295,15 @@ public class Table {
             tokens.add(0,headers);
         }
         if(containsInts && !containsFloats){
-            System.out.println(sum);
-            f.write(sum);
+            //System.out.println(String.valueOf(sum));
+            f.write(String.valueOf(sum));
             f.close();
         }else if(!containsInts && containsFloats){
-            System.out.println(fSum);
+            //System.out.println(String.valueOf(fSum));
             f.write(String.valueOf(fSum));
             f.close();
         }else if(containsInts && containsFloats){
-            System.out.println((float)sum + fSum);
+            //System.out.println((float)sum + fSum);
             f.write(String.valueOf((float)sum + fSum));
             f.close();
         }
@@ -672,13 +672,13 @@ public class Table {
         for(int i = 0; i < rowsAsInts.size(); i++){
             for(int j = 0; j < tokens.get(0).size(); j++){
 
-                System.out.print(tokens.get(rowsAsInts.get(i)).get(j) + " ");
+                //System.out.print(tokens.get(rowsAsInts.get(i)).get(j) + " ");
                 f.write(tokens.get(rowsAsInts.get(i)).get(j) + " ");
 
             }
             if(i != rowsAsInts.size()-1){
 
-                System.out.print("\n");
+                //System.out.print("\n");
                 f.write("\n");
 
             }
@@ -749,11 +749,11 @@ public class Table {
         int counter = 0;
         for(ArrayList<String> a : tokens){
             for(String s : a){
-                System.out.print(s + " ");
+                //System.out.print(s + " ");
                 f.write(s + " ");
             }
             if(counter++ != a.size()){
-                System.out.print("\n");
+                //System.out.print("\n");
                 f.write("\n");
             }
 
