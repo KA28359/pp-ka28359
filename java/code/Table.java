@@ -186,16 +186,23 @@ public class Table {
             }
         }
 
+        ArrayList<Integer> sorted = new ArrayList<>();
+        for(int i = 0; i < colVals.length; i++){
+            sorted.add(Integer.valueOf(colVals[i]));
+        }
+
+        Collections.sort(sorted);
+
         ArrayList<String> currentList;
         int counter = 0;
         for (ArrayList<String> token : tokens) {
 
             currentList = token;
 
-            for (String colVal : colVals) {
-                int currentCol = Integer.parseInt(String.valueOf(colVal));
+            for (Integer colVal : sorted) {
+                //int currentCol = colVal;
                 //System.out.print(currentList.get(currentCol) + " ");
-                f.write(currentList.get(currentCol) + " ");
+                f.write(currentList.get(colVal) + " ");
             }
             if(counter++ != token.size()){
                 //System.out.print("\n");
