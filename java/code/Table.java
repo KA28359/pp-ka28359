@@ -539,6 +539,11 @@ public class Table {
                         case "toupper":
 
                             String upperVersion = ToUpper(tokens,currentVal);
+                            if(upperVersion == null){
+                                f.write("TYPE ERROR");
+                                f.close();
+                                return;
+                            }
                             //System.out.println(upperVersion);
                             tokens.get(i).set(currentCol,upperVersion);
 
@@ -547,6 +552,11 @@ public class Table {
                         case "tolower":
 
                             String lowerVersion = ToLower(tokens,currentVal);
+                            if(lowerVersion == null){
+                                f.write("TYPE ERROR");
+                                f.close();
+                                return;
+                            }
                             //System.out.println(lowerVersion);
                             tokens.get(i).set(currentCol,lowerVersion);
                             break;
@@ -2135,12 +2145,20 @@ public class Table {
         p[1] = Integer.parseInt(inside.substring(2,3));
 
         String value = tokens.get(p[0]).get(p[1]);
+
+        if(IsInt(value) || IsFloat(value)){
+            return null;
+        }
         //String test = value.replaceAll("\\(\\[.*?\\]\\)(\\,)*", "");
-        String test = value.replaceAll("[^a-z'_'?]", "");
-        if(IsAction(value) && test.equals("to_upper")){
+        String test = value.replaceAll("[^a-z]", "");
+        if(IsAction(value) && test.equals("toupper")){
             value = ToUpper(tokens, value);
-        }else if(IsAction(value) && test.equals("to_lower")){
+        }else if(IsAction(value) && test.equals("tolower")){
             value = ToLower(tokens, value);
+        }
+
+        if(value == null){
+            return null;
         }
 
         return value.toUpperCase();
@@ -2156,13 +2174,18 @@ public class Table {
         p[1] = Integer.parseInt(inside.substring(2,3));
 
         String value = tokens.get(p[0]).get(p[1]);
-        String test = value.replaceAll("[^a-z'_'?]", "");
-        if(IsAction(value) && test.equals("to_lower")){
+        if(IsInt(value) || IsFloat(value)){
+            return null;
+        }
+        String test = value.replaceAll("[^a-z]", "");
+        if(IsAction(value) && test.equals("tolower")){
             value = ToLower(tokens, value);
-        }else if(IsAction(value) && test.equals("to_upper")){
+        }else if(IsAction(value) && test.equals("toupper")){
             value = ToUpper(tokens, value);
         }
-
+        if(value == null){
+            return null;
+        }
         return value.toLowerCase();
 
     }
