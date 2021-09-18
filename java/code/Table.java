@@ -513,7 +513,7 @@ public class Table {
                         case "sum":
 
                             //System.out.println("sum");
-                            float totalSum = CalculateSum(tokens,currentVal);
+                            float totalSum = CalculateSum(tokens,currentVal, f);
 
                             if(totalSum % 1 == 0){
                                 //System.out.println((int)totalSum);
@@ -526,7 +526,7 @@ public class Table {
                             break;
                         case "avg":
 
-                            float avg = CalculateAvg(tokens,currentVal);
+                            float avg = CalculateAvg(tokens,currentVal, f);
                             if(avg % 1 == 0){
                                 //System.out.println((int)avg);
                                 tokens.get(i).set(currentCol,String.valueOf((int)avg));
@@ -625,9 +625,8 @@ public class Table {
             return;
         }
 
-        String currentString = "";
         int startChar = 0;
-        int endChar = 0;
+        int endChar;
         for(int i = 0; i < cond.length(); i++){
 
             String currentChar = String.valueOf(cond.charAt(i));
@@ -644,8 +643,6 @@ public class Table {
 
 
         }
-
-        int currentElem = 0;
 
         if(!values.contains("&&") && !values.contains("||")){
 
@@ -665,10 +662,6 @@ public class Table {
 
             DoOrs(tokens, values, vRows, headers);
         }
-        //System.out.println(validRows);
-
-        //System.out.println(values);
-
 
 
         String printRows = values.get(0);
@@ -2036,14 +2029,28 @@ public class Table {
 
     }
 
-    static float CalculateSum(ArrayList<ArrayList<String>> tokens, String currentVal){
+    static float CalculateSum(ArrayList<ArrayList<String>> tokens, String currentVal, FileWriter f) throws IOException {
 
         if(IsInt(currentVal) || IsFloat(currentVal)){
             return Float.parseFloat(currentVal);
         }
 
         if(IsAction(currentVal) && currentVal.contains("avg")){
-            return CalculateAvg(tokens,currentVal);
+            return CalculateAvg(tokens,currentVal, f);
+        }else if(IsAction(currentVal) && currentVal.contains("upper")){
+            f.write("TYPE ERROR");
+            f.close();
+            System.exit(0);
+        }else if(IsAction(currentVal) && currentVal.contains("lower")){
+            f.write("TYPE ERROR");
+            f.close();
+            System.exit(0);
+        }else if(!IsAction(currentVal)){
+            if(!IsInt(currentVal) && !IsFloat(currentVal)){
+                f.write("TYPE ERROR");
+                f.close();
+                System.exit(0);
+            }
         }
 
         String inside = currentVal.replaceAll("[^0-9'\\,']", "");
@@ -2078,7 +2085,7 @@ public class Table {
         float total = 0;
         for(int[] list : listOfPoints){
 
-            float value = CalculateSum(tokens,tokens.get(list[0]).get(list[1]));
+            float value = CalculateSum(tokens,tokens.get(list[0]).get(list[1]), f);
             total = total + value;
 
         }
@@ -2087,7 +2094,7 @@ public class Table {
 
     }
 
-    static float CalculateAvg(ArrayList<ArrayList<String>> tokens, String currentVal){
+    static float CalculateAvg(ArrayList<ArrayList<String>> tokens, String currentVal, FileWriter f) throws IOException {
 
 //        String inside = currentVal.replaceAll("[^0-9]", "");
 //        int numVals = inside.length()/2;
@@ -2125,7 +2132,7 @@ public class Table {
         float total = 0;
         for(int[] list : listOfPoints){
 
-            float value = CalculateSum(tokens,tokens.get(list[0]).get(list[1]));
+            float value = CalculateSum(tokens,tokens.get(list[0]).get(list[1]), f);
             total = total + value;
 
         }
