@@ -659,15 +659,53 @@ public class Table {
 
         }
 
-        if(values.contains("&&")) {
-            ArrayList<Integer> validRows = new ArrayList<>();
+        while(values.contains("&&") || values.contains("||")){
 
-            DoAnds(tokens, values, validRows, headers);
-        }
-        if(values.contains("||")) {
-            ArrayList<Integer> vRows = new ArrayList<>();
+            int andIndex = -1;
+            int orIndex = -1;
+            if(values.contains("&&")){
+                andIndex = values.indexOf("&&");
+            }
+            if(values.contains("||")){
+                orIndex = values.indexOf("||");
+            }
 
-            DoOrs(tokens, values, vRows, headers);
+            if(andIndex != -1 && orIndex != -1){
+
+                if(andIndex < orIndex){
+                    ArrayList<Integer> validRows = new ArrayList<>();
+
+                    DoAnds(tokens, values, validRows, headers);
+                }else if(andIndex > orIndex){
+                    ArrayList<Integer> vRows = new ArrayList<>();
+
+                    DoOrs(tokens, values, vRows, headers);
+                }
+
+            }else if(andIndex != -1 && orIndex == -1){
+                ArrayList<Integer> validRows = new ArrayList<>();
+
+                DoAnds(tokens, values, validRows, headers);
+
+            }else if(orIndex != -1 && andIndex == -1){
+                ArrayList<Integer> vRows = new ArrayList<>();
+
+                DoOrs(tokens, values, vRows, headers);
+
+            }
+
+
+
+//            if(values.contains("&&")) {
+//                ArrayList<Integer> validRows = new ArrayList<>();
+//
+//                DoAnds(tokens, values, validRows, headers);
+//            }
+//            if(values.contains("||")) {
+//                ArrayList<Integer> vRows = new ArrayList<>();
+//
+//                DoOrs(tokens, values, vRows, headers);
+//            }
         }
 
 
@@ -1251,8 +1289,8 @@ public class Table {
                 values.remove(index-1);
                 values.remove(index);
 
-
-                continue;
+                return;
+                //continue;
             }
             if(values.get(index-1).startsWith("[")){//left side done, go to right
                 right = true;
@@ -1380,7 +1418,8 @@ public class Table {
                     values.set(index+1,validRows.toString());
                 }
                 validRows = new ArrayList<>();
-                continue;
+                return;
+                //continue;
             }
 
             boolean dne = false;
@@ -1661,7 +1700,8 @@ public class Table {
                 values.remove(index);
 
 
-                continue;
+                return;
+                //continue;
             }
             if(values.get(index-1).startsWith("[")){//left side done, go to right
                 right = true;
@@ -1789,7 +1829,8 @@ public class Table {
                     values.set(index+1,validRows.toString());
                 }
                 validRows = new ArrayList<>();
-                continue;
+                return;
+                //continue;
             }
 
             boolean dne = false;
