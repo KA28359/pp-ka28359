@@ -1,0 +1,1 @@
+The difference between procedural programming and object oriented programming is procedural uses many functions to accomplish a task while object oriented uses objects and classes which are meant to act like the objects we intend to implement. For example, in object oriented we can make a table class that contains the height and material and other information like that. 
