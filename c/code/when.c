@@ -45,12 +45,16 @@ void whenCommand(ArrayList tokens,char*argv[], bool header, char* outFile) {
             }else if((currentChar == '<' && cond[i+1] == '>') && (cond[i+2] == '$' || cond[i+2] == '@' || isalnum(cond[i+2]))){
                 if(cond[i+2] == '$' || cond[i+2] == '@'){
                     symLeftFound = true;
+                    checkedIndex = i+3;
+                    continue;
                 }
                 checkedIndex = i+2;
                 continue;
             }else if((currentChar == '=' && cond[i+1] == '=') && (cond[i+2] == '$' || cond[i+2] == '@' || isalnum(cond[i+2]))){
                 if(cond[i+2] == '$' || cond[i+2] == '@'){
                     symLeftFound = true;
+                    checkedIndex = i+3;
+                    continue;
                 }
                 checkedIndex = i+2;
                 continue;
@@ -59,7 +63,7 @@ void whenCommand(ArrayList tokens,char*argv[], bool header, char* outFile) {
                 break;
             }
         }
-        if(i>checkedIndex){
+        if(i>=checkedIndex){
             if(isalnum(cond[i])){
                 continue;
             }else if(commaFound && (cond[i] == '@' || cond[i] == '$')){
