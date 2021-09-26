@@ -12,7 +12,7 @@
 int main(int argc, char *argv[]) {
 
     bool header = false;
-    if(strcmp(argv[1],"-header") == 0){
+    if(strcmp(argv[1],"-header") == 0){ //checking if header present
         header = true;
     }
     char * filePath;
@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
     int numberOfRows = 0;
     int numberOfColumns = 0;
 
-    while(fgets(buff,225,file)){
+    while(fgets(buff,225,file)){ //checking if rows and cols match
         numberOfRows++;
         int colCounter = 0;
         int currentChar = 0;
@@ -132,7 +132,7 @@ int main(int argc, char *argv[]) {
 
     ArrayList *currentList = tokens;
     ArrayList *previousTokens;
-    while(currentList != NULL){
+    while(currentList != NULL){ //freeing memory
 
         ArrayListElement *thisElement = currentList->e;
         ArrayListElement *previousElement;

@@ -15,7 +15,7 @@ String *allocString(char *chars){
 
 }
 
-String *concatString(char *input,char *newVal){
+String *concatString(char *input,char *newVal){ //adding a value to the end of a string
     String *self = calloc(1,sizeof(String));
     self->content = calloc(strlen(input)+2,sizeof(char));
     strcpy(self->content,input);

@@ -35,7 +35,7 @@ void sumCommand(ArrayList tokens,char*argv[], bool header, char* outFile){ //don
 
     float sum = 0;
 
-    while(currentList != NULL){
+    while(currentList != NULL){ //traversing the 'arraylist'
 
         ArrayListElement thisElement = *(currentList->e);
         for(int j = 0; j < currentList->size; j++){
@@ -50,14 +50,14 @@ void sumCommand(ArrayList tokens,char*argv[], bool header, char* outFile){ //don
 
 
 
-            if((strtof(thisElement.value,NULL) == 0 && strcmp(thisElement.value,"0") != 0)){
+            if((strtof(thisElement.value,NULL) == 0 && strcmp(thisElement.value,"0") != 0)){ //incompatible type
                 fprintf(f,"TYPE ERROR");
                 fclose(f);
                 //printf("TYPE ERROR");
                 return;
             }
 
-            sum = sum + strtof(thisElement.value,NULL);
+            sum = sum + strtof(thisElement.value,NULL); //adding to sum
 
             if(thisElement.next != NULL){
                 thisElement = *thisElement.next;

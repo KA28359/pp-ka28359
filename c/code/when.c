@@ -26,23 +26,23 @@ void whenCommand(ArrayList tokens,char*argv[], bool header, char* outFile) {
     bool symRightFound = false;
     int checkedIndex = -1;
     bool commaFound = false;
-    for(int i = 0; i < strlen(cond); i++){
+    for(int i = 0; i < strlen(cond); i++){ //checking the format
 
         char currentChar = cond[i];
         if(i == 0){
-            if(currentChar == '>' && (cond[i+1] == '$' || cond[i+1] == '@' || isalnum(cond[i+1]))){
+            if(currentChar == '>' && (cond[i+1] == '$' || cond[i+1] == '@' || isalnum(cond[i+1]) || cond[i+1] == '-')){ //checking the comp symbol used
                 if(cond[i+1] == '$' || cond[i+1] == '@'){
                     symLeftFound = true;
                 }
                 checkedIndex = i+2;
                 continue;
-            }else if(currentChar == '<' && (cond[i+1] == '$' || cond[i+1] == '@' || isalnum(cond[i+1]))){
+            }else if(currentChar == '<' && (cond[i+1] == '$' || cond[i+1] == '@' || isalnum(cond[i+1]) || cond[i+1] == '-')){
                 if(cond[i+1] == '$' || cond[i+1] == '@'){
                     symLeftFound = true;
                 }
                 checkedIndex = i+2;
                 continue;
-            }else if((currentChar == '<' && cond[i+1] == '>') && (cond[i+2] == '$' || cond[i+2] == '@' || isalnum(cond[i+2]))){
+            }else if((currentChar == '<' && cond[i+1] == '>') && (cond[i+2] == '$' || cond[i+2] == '@' || isalnum(cond[i+2]) || cond[i+2] == '-')){
                 if(cond[i+2] == '$' || cond[i+2] == '@'){
                     symLeftFound = true;
                     checkedIndex = i+3;
@@ -50,7 +50,7 @@ void whenCommand(ArrayList tokens,char*argv[], bool header, char* outFile) {
                 }
                 checkedIndex = i+2;
                 continue;
-            }else if((currentChar == '=' && cond[i+1] == '=') && (cond[i+2] == '$' || cond[i+2] == '@' || isalnum(cond[i+2]))){
+            }else if((currentChar == '=' && cond[i+1] == '=') && (cond[i+2] == '$' || cond[i+2] == '@' || isalnum(cond[i+2]) || cond[i+2] == '-')){
                 if(cond[i+2] == '$' || cond[i+2] == '@'){
                     symLeftFound = true;
                     checkedIndex = i+3;
@@ -63,8 +63,8 @@ void whenCommand(ArrayList tokens,char*argv[], bool header, char* outFile) {
                 break;
             }
         }
-        if(i>=checkedIndex){
-            if(isalnum(cond[i])){
+        if(i>=checkedIndex){ //checking the rest of the input
+            if(isalnum(cond[i]) || cond[i] == '-'){
                 continue;
             }else if(commaFound && (cond[i] == '@' || cond[i] == '$')){
                 symRightFound = true;
@@ -86,7 +86,7 @@ void whenCommand(ArrayList tokens,char*argv[], bool header, char* outFile) {
 
     }
 
-    if(!formatGood || !commaFound || (commaFound && !symRightFound && !isalnum(cond[strlen(cond)-1]))){
+    if(!formatGood || !commaFound || (commaFound && !symRightFound && !isalnum(cond[strlen(cond)-1]))){ //not formatted good
         fprintf(f,"FORMAT ERROR");
         fclose(f);
         //printf("FORMAT ERROR");
@@ -151,8 +151,13 @@ void whenCommand(ArrayList tokens,char*argv[], bool header, char* outFile) {
             noneGiven = true;
         }
     }
+    bool headerGiven = false;
+    if(!noneGiven && !numGiven){
+        headerGiven = true;
+    }
 
-    if (noneGiven) {
+
+    if (noneGiven) { //no col val was given
 
         char *constVal1 = NULL;
         char *constVal2 = NULL;
@@ -274,7 +279,7 @@ void whenCommand(ArrayList tokens,char*argv[], bool header, char* outFile) {
         free(constVal2);
 
 
-    } else if (leftSide) {
+    } else if (leftSide) { //col val is on the left side
 
         char *colVal = NULL;
         char *constVal = NULL;
@@ -310,6 +315,18 @@ void whenCommand(ArrayList tokens,char*argv[], bool header, char* outFile) {
         int colNum = -1;
         if (numGiven) {
             colNum = atoi(colVal);
+        }else if(headerGiven){
+            ArrayList *headerList = &tokens;
+            ArrayListElement headerElement = *(headerList->e);
+            for (int j = 0; j < headerList->size; j++) {
+                if(strcmp(headerElement.value,colVal) == 0){
+                    colNum = j;
+                    break;
+                }
+                if (headerElement.next != NULL) {
+                    headerElement = *headerElement.next;
+                }
+            }
         }
 
         if(colNum < 0 || colNum >= tokens.size){
@@ -423,7 +440,7 @@ void whenCommand(ArrayList tokens,char*argv[], bool header, char* outFile) {
         free(colVal);
         free(constVal);
 
-    } else {
+    } else { //col val is on the right side
 
         char *colVal = NULL;
         char *constVal = NULL;
@@ -459,6 +476,18 @@ void whenCommand(ArrayList tokens,char*argv[], bool header, char* outFile) {
         int colNum = -1;
         if (numGiven) {
             colNum = atoi(colVal);
+        }else if(headerGiven){
+            ArrayList *headerList = &tokens;
+            ArrayListElement headerElement = *(headerList->e);
+            for (int j = 0; j < headerList->size; j++) {
+                if(strcmp(headerElement.value,colVal) == 0){
+                    colNum = j;
+                    break;
+                }
+                if (headerElement.next != NULL) {
+                    headerElement = *headerElement.next;
+                }
+            }
         }
 
         if(colNum < 0 || colNum >= tokens.size){
@@ -580,7 +609,7 @@ void whenCommand(ArrayList tokens,char*argv[], bool header, char* outFile) {
     }
     int counter = 0;
     bool flag = false;
-    while (currentListPrint != NULL) {
+    while (currentListPrint != NULL) { //print out the list
         if (currentListPrint->flag) {
 
             if(flag){
@@ -614,7 +643,7 @@ void whenCommand(ArrayList tokens,char*argv[], bool header, char* outFile) {
 }
 
 
-bool isInt(char*value){
+bool isInt(char*value){ //checking if value is an integer
 
     for(int i = 0; i < strlen(value); i++){
         if(i == 0){

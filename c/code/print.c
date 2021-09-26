@@ -40,7 +40,7 @@ void printCommand(ArrayList tokens, char*argv[], bool header, char* outFile){ //
     }
     colNums[currentIndex] = atoi(num);
     currentIndex++;
-    while(num!=NULL){
+    while(num!=NULL){ //getting all col vals
         num = strtok(NULL,",");
         if(num == NULL)continue;
         if(atoi(num) < 0 || atoi(num) >= tokens.size){
@@ -55,7 +55,7 @@ void printCommand(ArrayList tokens, char*argv[], bool header, char* outFile){ //
 
     ArrayList *currentList = &tokens;
     bool flag = false;
-    while(currentList != NULL){
+    while(currentList != NULL){ //traversing the 'arraylist'
 
         if(flag){
             fprintf(f,"\n");
