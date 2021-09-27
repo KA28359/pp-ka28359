@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# NOTE: do NOT modify this file.  This script runs tests.
+
+set -e
+
+if ! g++ --version |& grep 'g++' | grep ' 7' > /dev/null; then
+        echo "ERROR: Please use g++ 7.x.x"
+        exit 1
+fi
+
+echo "Compile code"
+( cd code
+  g++ *.cpp )
+
+echo "Running code"
+( cd code
+  ./simple -print 0 ../tests/1.txt ../tests/1.out )
