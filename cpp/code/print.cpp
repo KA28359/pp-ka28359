@@ -57,6 +57,7 @@ void DoPrint(std::vector<Column> cols, bool header, char *argv[]){ //fix space i
 
     if(colError){
         //printf("COL INDEX ERROR");
+        std::cout << "COL INDEX ERROR" << std::endl;
         f << "COL INDEX ERROR";
         f.close();
         return;

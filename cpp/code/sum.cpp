@@ -48,6 +48,7 @@ void DoSum(std::vector<Column> cols, bool header, char *argv[]){
 
     if(colError){
         //printf("COL INDEX ERROR");
+        std::cout << "COL INDEX ERROR" << std::endl;
         f << "COL INDEX ERROR";
         f.close();
         return;
@@ -55,6 +56,7 @@ void DoSum(std::vector<Column> cols, bool header, char *argv[]){
 
     if(!cols.at(colInt).stringEntries.empty()){
         //printf("TYPE ERROR");
+        std::cout << "TYPE ERROR" << std::endl;
         f << "TYPE ERROR";
         f.close();
         return;

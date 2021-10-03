@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
 
         std::string prog;
 
-        if(header){ //geting program name
+        if(header){ //getting program name
             prog = argv[2];
         }else{
             prog = argv[1];

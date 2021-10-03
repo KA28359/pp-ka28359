@@ -69,6 +69,7 @@ void DoWhen(std::vector<Column> cols, bool header, char *argv[]){ //error printi
     std::regex b("((<|==|>|<>)[$@]?[-_.a-zA-Z0-9]+,[$@]?[-_.a-zA-Z0-9]+)");
     if (!regex_match(cond, b)){
         //printf("COND ERROR");
+        std::cout << "COND INDEX ERROR" << std::endl;
         f << "COND ERROR";
         f.close();
         return;
@@ -241,6 +242,7 @@ void DoWhen(std::vector<Column> cols, bool header, char *argv[]){ //error printi
                 ss >> index;
                 if(index >= cols.size() || index < 0){
                     //printf("COL INDEX ERROR");
+                    std::cout << "COL INDEX ERROR" << std::endl;
                     f << "COL INDEX ERROR";
                     f.close();
                     return;
@@ -259,6 +261,7 @@ void DoWhen(std::vector<Column> cols, bool header, char *argv[]){ //error printi
             }
             if(!found){
                 //printf("COL INDEX ERROR");
+                std::cout << "COL INDEX ERROR" << std::endl;
                 f << "COL INDEX ERROR";
                 f.close();
                 return;
@@ -398,6 +401,7 @@ void DoWhen(std::vector<Column> cols, bool header, char *argv[]){ //error printi
                 ss >> index;
                 if(index >= cols.size() || index < 0){
                     //printf("COL INDEX ERROR");
+                    std::cout << "COL INDEX ERROR" << std::endl;
                     f << "COL INDEX ERROR";
                     f.close();
                     return;
@@ -416,6 +420,7 @@ void DoWhen(std::vector<Column> cols, bool header, char *argv[]){ //error printi
             }
             if(!found){
                 //printf("COL INDEX ERROR");
+                std::cout << "COL INDEX ERROR" << std::endl;
                 f << "COL INDEX ERROR";
                 f.close();
                 return;
