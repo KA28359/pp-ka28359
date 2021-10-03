@@ -69,7 +69,7 @@ void DoWhen(std::vector<Column> cols, bool header, char *argv[]){ //error printi
     std::regex b("((<|==|>|<>)[$@]?[-_.a-zA-Z0-9]+,[$@]?[-_.a-zA-Z0-9]+)");
     if (!regex_match(cond, b)){
         //printf("COND ERROR");
-        std::cout << "COND INDEX ERROR" << std::endl;
+        std::cout << "COND ERROR" << std::endl;
         f << "COND ERROR";
         f.close();
         return;
