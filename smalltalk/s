@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# NOTE: do NOT modify this file.  This script runs tests.
+
+set -e
+
+readonly PHARO_VM_DIR=Pharo
+
+if [[ ! -d ${PHARO_VM_DIR} ]]; then
+        echo "Downloading Pharo VM 9"
+        mkdir -p ${PHARO_VM_DIR}
+        ( cd ${PHARO_VM_DIR}
+          wget -O- https://get.pharo.org/64/vm90 | bash
+        )
+fi
+
+echo "Running code"
+( cd code
+  ./simple -print 0 ../tests/1.txt ../tests/1.out )
