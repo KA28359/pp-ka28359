@@ -4,15 +4,29 @@
 
 set -e
 
+readonly _DIR="$( pwd )"
 readonly PHARO_VM_DIR=Pharo
 
-if [[ ! -d ${PHARO_VM_DIR} ]]; then
-        echo "Downloading Pharo VM 9"
+if [[ ! -f ${PHARO_VM_DIR}/pharo ]]; then
+        echo "Downloading Pharo VM for 90..."
         mkdir -p ${PHARO_VM_DIR}
         ( cd ${PHARO_VM_DIR}
           wget -O- https://get.pharo.org/64/vm90 | bash
         )
 fi
+
+if [[ ! -f ${PHARO_VM_DIR}/Pharo.image ]]; then
+        echo "Downloading Pharo 90 Image..."
+        mkdir -p ${PHARO_VM_DIR}
+        ( cd ${PHARO_VM_DIR}
+          wget -O- https://get.pharo.org/64/90 | bash
+        )
+fi
+
+
+echo "Loading code"
+( cd ${PHARO_VM_DIR}
+  ./pharo -headless Pharo.image metacello install "gitlocal://${_DIR}/code/src" BaselineOfTable )
 
 echo "Running code"
 ( cd code

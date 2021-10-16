@@ -154,3 +154,27 @@ examples and then expand from there.
 
 In your implementation, you can use standard libraries available in
 Pharo 9, but you cannot use any third-party libraries/code.
+
+
+### SUBMISSION
+Baseline configuration:
+```
+Class {
+	#name : #BaselineOfTable,
+	#superclass : #BaselineOf,
+	#category : #BaselineOfTable
+}
+
+{ #category : #baselines }
+BaselineOfTable >> baseline: spec [
+	<baseline>
+	spec
+		for: #common
+		do: [ spec package: 'Table' ]
+]
+
+{ #category : #accessing }
+BaselineOfTable >> projectClass [
+	^ MetacelloCypressBaselineProject
+]
+```
