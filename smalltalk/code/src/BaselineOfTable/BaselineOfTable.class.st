@@ -1,6 +1,6 @@
 Class {
 	#name : #BaselineOfTable,
-	#superclass : #Object,
+	#superclass : #BaselineOf,
 	#category : #BaselineOfTable
 }
 
@@ -10,10 +10,9 @@ BaselineOfTable >> baseline: spec [
 	spec
 		for: #common
 		do: [ spec package: 'Table' ]
-
 ]
 
 { #category : #accessing }
-BaselineOfTable >> projectClass [ 
+BaselineOfTable >> projectClass [  
 	^ MetacelloCypressBaselineProject
 ]
