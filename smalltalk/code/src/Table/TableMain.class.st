@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'arr',
-		'rows'
+		'rows',
+		'stdDir'
 	],
 	#category : #Table
 }
@@ -21,7 +22,7 @@ TableMain >> left: args header: header cond: cond gt:gt lt:lt eq:eq dne:dne cont
 
 	containsColHeader ifTrue:[header ifTrue:[colVal:= (((rows at: 1) substrings)indexOf: colVal ifAbsent: [
 			|errorOut|
-			errorOut := 'stdout.txt' asFileReference writeStream. 
+			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'COL INDEX ERROR' . 
 			errorOut close .
 			^nil.
@@ -32,14 +33,14 @@ TableMain >> left: args header: header cond: cond gt:gt lt:lt eq:eq dne:dne cont
 	
 	(colVal asNumber)+1 > ((arr at: 1)size ) ifTrue: [
 			|errorOut|
-			errorOut := 'stdout.txt' asFileReference writeStream. 
+			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'COL INDEX ERROR' . 
 			errorOut close .
 			^nil.
 			].
 	(colVal asNumber)+1 < 1 ifTrue: [
 			|errorOut|
-			errorOut := 'stdout.txt' asFileReference writeStream. 
+			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'COL INDEX ERROR' . 
 			errorOut close .
 			^nil.
@@ -111,6 +112,8 @@ TableMain >> main: args [
 	filePath  := (args substrings at: 3).
 	header ifTrue: [ filePath  := (args substrings at: 4) ].
 	readStream := filePath asFileReference readStream.
+	stdDir := (args substrings at: 3) asFileReference.
+	stdDir := stdDir  parent pathString.
 	arr := OrderedCollection new.
 	rows := OrderedCollection new.
 	"Transcript show: (readStream upTo: Character cr)."
@@ -132,7 +135,7 @@ TableMain >> main: args [
 	
 	sizeGood ifFalse:[
 		|writeStream| 
-		writeStream := 'stdout.txt' asFileReference writeStream.
+		writeStream := (stdDir,'/stdout.txt') asFileReference writeStream.
 		writeStream nextPutAll: 'NUM COLS ERROR'.
 		writeStream close.
 		]. "num of cols dont match in every row"
@@ -226,7 +229,7 @@ TableMain >> print: args header: header [
 	"checking values"
 	colVals do:[:a| (a asNumber)+1 > ((arr at: 1)size ) ifTrue: [
 			|errorOut|
-			errorOut := 'stdout.txt' asFileReference writeStream. 
+			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'COL INDEX ERROR' . 
 			errorOut close .
 			^nil.
@@ -234,7 +237,7 @@ TableMain >> print: args header: header [
 		].
 	colVals do:[:a| (a asNumber)+1 < 1 ifTrue: [
 			|errorOut|
-			errorOut := 'stdout.txt' asFileReference writeStream. 
+			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'COL INDEX ERROR' . 
 			errorOut close .
 			^nil.
@@ -266,7 +269,7 @@ TableMain >> right:args header: header cond: cond gt:gt lt:lt eq:eq dne:dne cont
 	
 	containsColHeader ifTrue:[header ifTrue:[colVal:= (((rows at: 1) substrings)indexOf: colVal ifAbsent: [
 			|errorOut|
-			errorOut := 'stdout.txt' asFileReference writeStream. 
+			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'COL INDEX ERROR' . 
 			errorOut close .
 			^nil.
@@ -277,14 +280,14 @@ TableMain >> right:args header: header cond: cond gt:gt lt:lt eq:eq dne:dne cont
 	
 	(colVal asNumber)+1 > ((arr at: 1)size ) ifTrue: [
 			|errorOut|
-			errorOut := 'stdout.txt' asFileReference writeStream. 
+			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'COL INDEX ERROR' . 
 			errorOut close .
 			^nil.
 			].
 	(colVal asNumber)+1 < 1 ifTrue: [
 			|errorOut|
-			errorOut := 'stdout.txt' asFileReference writeStream. 
+			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'COL INDEX ERROR' . 
 			errorOut close .
 			^nil.
@@ -358,14 +361,14 @@ TableMain >> sum: args header: header [
 	"checking value"
 	(colVal asNumber)+1 > ((arr at: 1)size ) ifTrue: [
 			|errorOut|
-			errorOut := 'stdout.txt' asFileReference writeStream. 
+			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'COL INDEX ERROR' . 
 			errorOut close .
 			^nil.
 			].
 	(colVal asNumber)+1 < 1 ifTrue: [
 			|errorOut|
-			errorOut := 'stdout.txt' asFileReference writeStream. 
+			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'COL INDEX ERROR' . 
 			errorOut close .
 			^nil.
@@ -378,7 +381,7 @@ TableMain >> sum: args header: header [
    :x |  temp := Number readFrom: ((arr at: x)at:((colVal asNumber)+1)) 
 	ifFail: [
 			|errorOut|
-			errorOut := 'stdout.txt' asFileReference writeStream. 
+			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'TYPE ERROR' . 
 			errorOut close .
 			^nil.
@@ -412,7 +415,7 @@ TableMain >> when: args header: header [
 	matcher := '((<|==|>|<>)[$@]?[-_.a-zA-Z0-9+]+,[$@]?[-_.a-zA-Z0-9+]+)' asRegex.
    (matcher matches: cond) ifFalse: [
 			|errorOut|
-			errorOut := 'stdout.txt' asFileReference writeStream. 
+			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'COND ERROR' . 
 			errorOut close .
 			^nil.
