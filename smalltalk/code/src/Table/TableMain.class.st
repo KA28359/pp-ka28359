@@ -16,6 +16,8 @@ TableMain >> left: args header: header cond: cond gt:gt lt:lt eq:eq dne:dne cont
 	header ifTrue:[fileOutPath := (args substrings at:5)] ifFalse: [fileOutPath := (args substrings at:4)].
 	rowNums := OrderedCollection new.
 	writeStream := fileOutPath asFileReference.
+	writeStream writeStreamDo: [:s | s truncate.].
+	writeStream := fileOutPath asFileReference writeStream.
 	containsColNum ifTrue:[colVal := cond copyFrom:((cond indexOf:$$)+1) to: ((cond indexOf:$,)-1)].
 	containsColHeader ifTrue:[header ifTrue: [colVal := cond copyFrom:((cond indexOf:$@)+1) to: ((cond indexOf:$,)-1)].].
 	constVal := cond copyFrom:((cond indexOf:$,)+1) to: ((cond size)).
@@ -100,8 +102,6 @@ TableMain >> left: args header: header cond: cond gt:gt lt:lt eq:eq dne:dne cont
 	].
 
 	header ifTrue:[rowNums add: 0].
-	writeStream writeStreamDo: [:s | s truncate.].
-	writeStream := fileOutPath asFileReference writeStream.
 
 	0 to: ((rows size)-1) do: [
    :x | (rowNums includes: x) ifTrue:[writeStream nextPutAll: (rows at: (x+1));space . writeStream cr.]. 
@@ -166,6 +166,8 @@ TableMain >> none:args header: header cond: cond gt:gt lt:lt eq:eq dne:dne conta
 	rowNums := OrderedCollection new.
 	header ifTrue:[fileOutPath := (args substrings at:5)] ifFalse: [fileOutPath := (args substrings at:4)].
 	writeStream := fileOutPath asFileReference.
+	writeStream writeStreamDo: [:s | s truncate.].
+	writeStream := fileOutPath asFileReference writeStream.
 	constVal2 := cond copyFrom:((cond indexOf:$,)+1) to: ((cond size)).
 	eq ifTrue:[constVal1 := cond copyFrom:3 to: ((cond indexOf:$,)-1).].
 	dne ifTrue:[constVal1 := cond copyFrom:3 to: ((cond indexOf:$,)-1).].
@@ -217,8 +219,6 @@ TableMain >> none:args header: header cond: cond gt:gt lt:lt eq:eq dne:dne conta
 	].
 
 	header ifTrue:[rowNums add: 0].
-	writeStream writeStreamDo: [:s | s truncate.].
-	writeStream := fileOutPath asFileReference writeStream.
 
 	0 to: ((rows size)-1) do: [
    :x | (rowNums includes: x) ifTrue:[writeStream nextPutAll: (rows at: (x+1));space . writeStream cr.]. 
@@ -236,6 +236,8 @@ TableMain >> print: args header: header [
 	header ifTrue:[colNum := (args substrings at: 3) ]  ifFalse: [colNum := (args substrings at: 2) ].
 	header ifTrue:[fileOutPath := (args substrings at:5)] ifFalse: [fileOutPath := (args substrings at:4)].
 	writeStream := fileOutPath asFileReference.
+	writeStream writeStreamDo: [:s | s truncate.].
+	writeStream := fileOutPath asFileReference writeStream.
 	"Transcript show: colNum ; cr."
 	colVals := OrderedCollection new.
 	colVals := colNum splitOn: ','. "getting all column values"
@@ -261,8 +263,7 @@ TableMain >> print: args header: header [
 			^nil.
 			].
 		].
-	writeStream writeStreamDo: [:s | s truncate.].
-	writeStream := fileOutPath asFileReference writeStream.
+	
 	1 to: rows size do: [
    :x | colVals do: [:a | writeStream nextPutAll: ((arr at: x)at:((a asNumber)+1)) ;space ]. writeStream cr.
 	].  "printing all values that were asked for"
@@ -279,6 +280,8 @@ TableMain >> right:args header: header cond: cond gt:gt lt:lt eq:eq dne:dne cont
 	header ifTrue:[fileOutPath := (args substrings at:5)] ifFalse: [fileOutPath := (args substrings at:4)].
 	rowNums := OrderedCollection new.
 	writeStream := fileOutPath asFileReference.
+	writeStream writeStreamDo: [:s | s truncate.].
+	writeStream := fileOutPath asFileReference writeStream.
 	containsColNum ifTrue:[colVal := cond copyFrom:((cond indexOf:$$)+1) to: ((cond size))].
 	containsColHeader ifTrue:[header ifTrue: [colVal := cond copyFrom:((cond indexOf:$@)+1) to: ((cond size))].].
 	eq ifTrue:[constVal := cond copyFrom:3 to: ((cond indexOf:$,)-1).].
@@ -366,8 +369,6 @@ TableMain >> right:args header: header cond: cond gt:gt lt:lt eq:eq dne:dne cont
 	].
 	
 	header ifTrue:[rowNums add: 0].
-	writeStream writeStreamDo: [:s | s truncate.].
-	writeStream := fileOutPath asFileReference writeStream.
 
 	0 to: ((rows size)-1) do: [
    :x | (rowNums includes: x) ifTrue:[writeStream nextPutAll: (rows at: (x+1));space . writeStream cr.]. 
@@ -387,6 +388,8 @@ TableMain >> sum: args header: header [
 	header ifTrue:[fileOutPath := (args substrings at:5)] ifFalse: [fileOutPath := (args substrings at:4)].
 	colVal := colNum asNumber.
 	writeStream := fileOutPath asFileReference.
+	writeStream writeStreamDo: [:s | s truncate.].
+	writeStream := fileOutPath asFileReference writeStream.
 	"checking value"
 	(colVal asNumber)+1 > ((arr at: 1)size ) ifTrue: [
 			|errorOut|
@@ -424,8 +427,6 @@ TableMain >> sum: args header: header [
 	currentSum := currentSum + temp.
 	].  "visiting all values in the column"
 		
-	writeStream writeStreamDo: [:s | s truncate.].
-	writeStream := fileOutPath asFileReference writeStream.
 	
 	"Transcript show:currentSum asString."
 	writeStream nextPutAll: currentSum asString.
