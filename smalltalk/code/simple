@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # you can put any lines here to run your program for the given input.
-../Pharo/pharo Table.image eval "|a|. a:=TableMain new. a main: \"$*\""
+../Pharo/pharo -headless ../Pharo/Pharo.image eval "|a|. a:=TableMain new. a main: '$*'"
