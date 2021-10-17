@@ -121,6 +121,7 @@ TableMain >> main: args [
 	header ifTrue: [ filePath  := (args substrings at: 4) ].
 	readStream := filePath asFileReference readStream.
 	stdDir := (args substrings at: 3) asFileReference.
+	header ifTrue: [ stdDir := (args substrings at: 4) asFileReference.].
 	stdDir := stdDir  parent pathString.
 	arr := OrderedCollection new.
 	rows := OrderedCollection new.
