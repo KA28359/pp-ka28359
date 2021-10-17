@@ -15,13 +15,15 @@ TableMain >> left: args header: header cond: cond gt:gt lt:lt eq:eq dne:dne cont
 	|colVal constVal rowNums temp1 temp2 startRow fileOutPath writeStream|
 	header ifTrue:[fileOutPath := (args substrings at:5)] ifFalse: [fileOutPath := (args substrings at:4)].
 	rowNums := OrderedCollection new.
-	writeStream := fileOutPath asFileReference writeStream.
-	containsColNum ifTrue:[header ifFalse: [colVal := cond copyFrom:((cond indexOf:$$)+1) to: ((cond indexOf:$,)-1)].].
+	writeStream := fileOutPath asFileReference.
+	containsColNum ifTrue:[colVal := cond copyFrom:((cond indexOf:$$)+1) to: ((cond indexOf:$,)-1)].
 	containsColHeader ifTrue:[header ifTrue: [colVal := cond copyFrom:((cond indexOf:$@)+1) to: ((cond indexOf:$,)-1)].].
 	constVal := cond copyFrom:((cond indexOf:$,)+1) to: ((cond size)).
 
 	containsColHeader ifTrue:[header ifTrue:[colVal:= (((rows at: 1) substrings)indexOf: colVal ifAbsent: [
 			|errorOut|
+			errorOut := (stdDir,'/stdout.txt') asFileReference.
+			errorOut writeStreamDo: [:s | s truncate.].
 			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'COL INDEX ERROR' . 
 			errorOut close .
@@ -33,6 +35,8 @@ TableMain >> left: args header: header cond: cond gt:gt lt:lt eq:eq dne:dne cont
 	
 	(colVal asNumber)+1 > ((arr at: 1)size ) ifTrue: [
 			|errorOut|
+			errorOut := (stdDir,'/stdout.txt') asFileReference.
+			errorOut writeStreamDo: [:s | s truncate.].
 			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'COL INDEX ERROR' . 
 			errorOut close .
@@ -40,6 +44,8 @@ TableMain >> left: args header: header cond: cond gt:gt lt:lt eq:eq dne:dne cont
 			].
 	(colVal asNumber)+1 < 1 ifTrue: [
 			|errorOut|
+			errorOut := (stdDir,'/stdout.txt') asFileReference.
+			errorOut writeStreamDo: [:s | s truncate.].
 			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'COL INDEX ERROR' . 
 			errorOut close .
@@ -93,8 +99,10 @@ TableMain >> left: args header: header cond: cond gt:gt lt:lt eq:eq dne:dne cont
 		].
 	].
 
-	header ifTrue:[writeStream nextPutAll: (rows at: (1));space . writeStream cr.].
-	
+	header ifTrue:[rowNums add: 0].
+	writeStream writeStreamDo: [:s | s truncate.].
+	writeStream := fileOutPath asFileReference writeStream.
+
 	0 to: ((rows size)-1) do: [
    :x | (rowNums includes: x) ifTrue:[writeStream nextPutAll: (rows at: (x+1));space . writeStream cr.]. 
 	]. 
@@ -134,10 +142,12 @@ TableMain >> main: args [
 	readStream close.
 	
 	sizeGood ifFalse:[
-		|writeStream| 
-		writeStream := (stdDir,'/stdout.txt') asFileReference writeStream.
-		writeStream nextPutAll: 'NUM COLS ERROR'.
-		writeStream close.
+		|errorOut| 
+			errorOut := (stdDir,'/stdout.txt') asFileReference.
+			errorOut writeStreamDo: [:s | s truncate.].
+			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
+			errorOut nextPutAll: 'NUM COLS ERROR' . 
+			errorOut close .
 		]. "num of cols dont match in every row"
 	
 	header = true ifTrue:[(args substrings at: 2) = '-print' ifTrue:[self print:args header: header] ].
@@ -155,7 +165,7 @@ TableMain >> none:args header: header cond: cond gt:gt lt:lt eq:eq dne:dne conta
 	|constVal1 constVal2 rowNums temp1 temp2 fileOutPath writeStream|
 	rowNums := OrderedCollection new.
 	header ifTrue:[fileOutPath := (args substrings at:5)] ifFalse: [fileOutPath := (args substrings at:4)].
-	writeStream := fileOutPath asFileReference writeStream.
+	writeStream := fileOutPath asFileReference.
 	constVal2 := cond copyFrom:((cond indexOf:$,)+1) to: ((cond size)).
 	eq ifTrue:[constVal1 := cond copyFrom:3 to: ((cond indexOf:$,)-1).].
 	dne ifTrue:[constVal1 := cond copyFrom:3 to: ((cond indexOf:$,)-1).].
@@ -206,12 +216,16 @@ TableMain >> none:args header: header cond: cond gt:gt lt:lt eq:eq dne:dne conta
 		].
 	].
 
-	header ifTrue: [(rowNums isEmpty) ifTrue: [writeStream nextPutAll: (rows at: (1));cr.].].
+	header ifTrue:[rowNums add: 0].
+	writeStream writeStreamDo: [:s | s truncate.].
+	writeStream := fileOutPath asFileReference writeStream.
 
 	0 to: ((rows size)-1) do: [
    :x | (rowNums includes: x) ifTrue:[writeStream nextPutAll: (rows at: (x+1));space . writeStream cr.]. 
 	]. 
 	"Transcript show: rowNums."
+
+
 	writeStream close.
 ]
 
@@ -221,7 +235,7 @@ TableMain >> print: args header: header [
 	|colNum colVals fileOutPath writeStream|
 	header ifTrue:[colNum := (args substrings at: 3) ]  ifFalse: [colNum := (args substrings at: 2) ].
 	header ifTrue:[fileOutPath := (args substrings at:5)] ifFalse: [fileOutPath := (args substrings at:4)].
-	writeStream := fileOutPath asFileReference writeStream.
+	writeStream := fileOutPath asFileReference.
 	"Transcript show: colNum ; cr."
 	colVals := OrderedCollection new.
 	colVals := colNum splitOn: ','. "getting all column values"
@@ -229,6 +243,8 @@ TableMain >> print: args header: header [
 	"checking values"
 	colVals do:[:a| (a asNumber)+1 > ((arr at: 1)size ) ifTrue: [
 			|errorOut|
+			errorOut := (stdDir,'/stdout.txt') asFileReference.
+			errorOut writeStreamDo: [:s | s truncate.].
 			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'COL INDEX ERROR' . 
 			errorOut close .
@@ -237,13 +253,16 @@ TableMain >> print: args header: header [
 		].
 	colVals do:[:a| (a asNumber)+1 < 1 ifTrue: [
 			|errorOut|
+			errorOut := (stdDir,'/stdout.txt') asFileReference.
+			errorOut writeStreamDo: [:s | s truncate.].
 			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'COL INDEX ERROR' . 
 			errorOut close .
 			^nil.
 			].
 		].
-	
+	writeStream writeStreamDo: [:s | s truncate.].
+	writeStream := fileOutPath asFileReference writeStream.
 	1 to: rows size do: [
    :x | colVals do: [:a | writeStream nextPutAll: ((arr at: x)at:((a asNumber)+1)) ;space ]. writeStream cr.
 	].  "printing all values that were asked for"
@@ -259,8 +278,8 @@ TableMain >> right:args header: header cond: cond gt:gt lt:lt eq:eq dne:dne cont
 	|colVal constVal rowNums temp1 temp2 startRow fileOutPath writeStream|
 	header ifTrue:[fileOutPath := (args substrings at:5)] ifFalse: [fileOutPath := (args substrings at:4)].
 	rowNums := OrderedCollection new.
-	writeStream := fileOutPath asFileReference writeStream.
-	containsColNum ifTrue:[header ifFalse: [colVal := cond copyFrom:((cond indexOf:$$)+1) to: ((cond size))].].
+	writeStream := fileOutPath asFileReference.
+	containsColNum ifTrue:[colVal := cond copyFrom:((cond indexOf:$$)+1) to: ((cond size))].
 	containsColHeader ifTrue:[header ifTrue: [colVal := cond copyFrom:((cond indexOf:$@)+1) to: ((cond size))].].
 	eq ifTrue:[constVal := cond copyFrom:3 to: ((cond indexOf:$,)-1).].
 	dne ifTrue:[constVal := cond copyFrom:3 to: ((cond indexOf:$,)-1).].
@@ -269,6 +288,8 @@ TableMain >> right:args header: header cond: cond gt:gt lt:lt eq:eq dne:dne cont
 	
 	containsColHeader ifTrue:[header ifTrue:[colVal:= (((rows at: 1) substrings)indexOf: colVal ifAbsent: [
 			|errorOut|
+			errorOut := (stdDir,'/stdout.txt') asFileReference.
+			errorOut writeStreamDo: [:s | s truncate.].
 			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'COL INDEX ERROR' . 
 			errorOut close .
@@ -280,6 +301,8 @@ TableMain >> right:args header: header cond: cond gt:gt lt:lt eq:eq dne:dne cont
 	
 	(colVal asNumber)+1 > ((arr at: 1)size ) ifTrue: [
 			|errorOut|
+			errorOut := (stdDir,'/stdout.txt') asFileReference.
+			errorOut writeStreamDo: [:s | s truncate.].
 			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'COL INDEX ERROR' . 
 			errorOut close .
@@ -287,6 +310,8 @@ TableMain >> right:args header: header cond: cond gt:gt lt:lt eq:eq dne:dne cont
 			].
 	(colVal asNumber)+1 < 1 ifTrue: [
 			|errorOut|
+			errorOut := (stdDir,'/stdout.txt') asFileReference.
+			errorOut writeStreamDo: [:s | s truncate.].
 			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'COL INDEX ERROR' . 
 			errorOut close .
@@ -340,12 +365,16 @@ TableMain >> right:args header: header cond: cond gt:gt lt:lt eq:eq dne:dne cont
 		].
 	].
 	
-	header ifTrue:[writeStream nextPutAll: (rows at: (1));space . writeStream cr.].
-	
+	header ifTrue:[rowNums add: 0].
+	writeStream writeStreamDo: [:s | s truncate.].
+	writeStream := fileOutPath asFileReference writeStream.
+
 	0 to: ((rows size)-1) do: [
    :x | (rowNums includes: x) ifTrue:[writeStream nextPutAll: (rows at: (x+1));space . writeStream cr.]. 
 	]. 
 	"Transcript show: rowNums."
+
+
 	writeStream close.
 ]
 
@@ -357,10 +386,12 @@ TableMain >> sum: args header: header [
 	header = true ifTrue:[colNum := (args substrings at: 3) ]  ifFalse: [colNum := (args substrings at: 2) ].
 	header ifTrue:[fileOutPath := (args substrings at:5)] ifFalse: [fileOutPath := (args substrings at:4)].
 	colVal := colNum asNumber.
-	writeStream := fileOutPath asFileReference writeStream.
+	writeStream := fileOutPath asFileReference.
 	"checking value"
 	(colVal asNumber)+1 > ((arr at: 1)size ) ifTrue: [
 			|errorOut|
+			errorOut := (stdDir,'/stdout.txt') asFileReference.
+			errorOut writeStreamDo: [:s | s truncate.].
 			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'COL INDEX ERROR' . 
 			errorOut close .
@@ -368,6 +399,8 @@ TableMain >> sum: args header: header [
 			].
 	(colVal asNumber)+1 < 1 ifTrue: [
 			|errorOut|
+			errorOut := (stdDir,'/stdout.txt') asFileReference.
+			errorOut writeStreamDo: [:s | s truncate.].
 			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'COL INDEX ERROR' . 
 			errorOut close .
@@ -381,6 +414,8 @@ TableMain >> sum: args header: header [
    :x |  temp := Number readFrom: ((arr at: x)at:((colVal asNumber)+1)) 
 	ifFail: [
 			|errorOut|
+			errorOut := (stdDir,'/stdout.txt') asFileReference.
+			errorOut writeStreamDo: [:s | s truncate.].
 			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'TYPE ERROR' . 
 			errorOut close .
@@ -389,7 +424,8 @@ TableMain >> sum: args header: header [
 	currentSum := currentSum + temp.
 	].  "visiting all values in the column"
 		
-
+	writeStream writeStreamDo: [:s | s truncate.].
+	writeStream := fileOutPath asFileReference writeStream.
 	
 	"Transcript show:currentSum asString."
 	writeStream nextPutAll: currentSum asString.
@@ -415,6 +451,8 @@ TableMain >> when: args header: header [
 	matcher := '((<|==|>|<>)[$@]?[-_.a-zA-Z0-9+]+,[$@]?[-_.a-zA-Z0-9+]+)' asRegex.
    (matcher matches: cond) ifFalse: [
 			|errorOut|
+			errorOut := (stdDir,'/stdout.txt') asFileReference.
+			errorOut writeStreamDo: [:s | s truncate.].
 			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'COND ERROR' . 
 			errorOut close .
