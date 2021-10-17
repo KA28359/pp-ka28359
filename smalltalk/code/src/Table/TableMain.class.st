@@ -149,6 +149,7 @@ TableMain >> main: args [
 			errorOut := (stdDir,'/stdout.txt') asFileReference writeStream. 
 			errorOut nextPutAll: 'NUM COLS ERROR' . 
 			errorOut close .
+			^nil.
 		]. "num of cols dont match in every row"
 	
 	header = true ifTrue:[(args substrings at: 2) = '-print' ifTrue:[self print:args header: header] ].
