@@ -388,7 +388,7 @@ TableMain >> sum: args header: header [
 	header ifTrue:[fileOutPath := (args substrings at:5)] ifFalse: [fileOutPath := (args substrings at:4)].
 	colVal := colNum asNumber.
 	writeStream := fileOutPath asFileReference.
-	writeStream writeStreamDo: [:s | s truncate.].
+	writeStream writeStreamDo: [:s | s truncate. s close.].
 	writeStream := fileOutPath asFileReference writeStream.
 	"checking value"
 	(colVal asNumber)+1 > ((arr at: 1)size ) ifTrue: [
