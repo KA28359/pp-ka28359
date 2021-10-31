@@ -10,7 +10,7 @@ let rec remove_all list m =
   [] -> []
   | hd :: tl -> if m = hd then remove_all tl m else hd::remove_all tl m;;
 
-remove_all [2; 4; 3; 7; 2; 8; 2] 2;;
+(* remove_all [2; 4; 3; 7; 2; 8; 2] 2;; *)
 (* - : int list = [4; 3; 7; 8] *)
 
 (* Problem 2 *)
@@ -41,6 +41,8 @@ let rec separate p l =
   [] -> (0,0)
   | hd :: tl -> if (p hd) = true then match separate p tl with (t,f) -> (t+1,f) else match separate p tl with (t,f) -> (t,f+1);;
 
+(* We check which ones match, and on the returns, we increment one to the given entry *)
+
 (* separate (fun x -> x mod 2 = 0) [-3; 5; 2; -6];; *)
 (* - : int * int = (2, 2) *)
 
@@ -53,6 +55,8 @@ let rec all_even list =
   match list with
   []->true
   | hd::tl -> if (hd mod 2) = 0 then all_even tl else false;;
+
+(* As soon as one entry fails, the whole thing fails *)
 
 (* all_even [4; 2; 12; 5; 6];; *)
 (* - : bool = false *)
@@ -67,6 +71,8 @@ let rec sum_square m n =
   if ((m+2) > n) then 0 else
     ((m+1)*(m+1))+sum_square (m+1) n;;
 
+(* We do m+1 because it is non inclusive *)
+
 
 (* sum_square 3 9;; *)
 (* - : int = 190 *)
@@ -79,11 +85,14 @@ consecutive elements. Also all strings equal to s should be
 excluded. You may not use any library functions. *)
 
 let rec concat s list =
-  let rec cat cs l =
-    match l with [] -> cs
-      | (str :: strs) -> if(str = s) then(cat cs strs) else(cat (cs ^ " " ^ str) strs)
+  let rec cat conS l =
+    match l with [] -> conS
+      | (h :: t) -> if(h = s) then(cat conS t) else(cat (conS ^ " " ^ h) t)
   in match list with [] -> ""
-      | (s0 :: ss) -> if(s0 = s) then (concat s ss) else (s0 ^ cat "" ss);;
+      | (hd :: tl) -> if(hd = s) then (concat s tl) else (hd ^ cat "" tl);;
+
+(* We keep checking in order the words until we find the first word that doesn't 
+match s, then we go through the rest, concatenating when we dont find a match *)
 
 (* concat "hi" ["How"; "are"; "hi"; "you?"];; *)
 (* - : string = "How are you?" *)
