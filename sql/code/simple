@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Compile code
+javac -cp ../h2-1.4.200.jar $(find . -name '*.java')
+
+# Run code
+java -cp ../h2-1.4.200.jar:. Main "$@"

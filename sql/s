@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# vvvvv do NOT modify this part vvvvv
+
+set -e
+
+if ! java -version |& grep '1.8' > /dev/null; then
+        echo "ERROR: Please use Oracle Java 8"
+        exit 1
+fi
+
+if [[ ! -f h2-1.4.200.jar ]]; then
+        echo "Downloading h2-1.4.200.jar..."
+        wget https://repo1.maven.org/maven2/com/h2database/h2/1.4.200/h2-1.4.200.jar
+fi
+
+( cd code
+
+# ^^^^^ do NOT modify this part ^^^^^
+
+  # You can modify these arguments to run other test cases
+  ./simple ../tests/1.txt ../tests/1.out
+)
